@@ -90,7 +90,7 @@ input[type=text]{width:100%;background:#0d131c;border:1px solid var(--line);colo
 <input type="file" id="fimport" accept=".json,application/json" style="display:none">
 <script>
 'use strict';
-const APP_V='2.0.0';
+const APP_V='2.1.0';
 /* ====================== DONNÉES DU JEU ====================== */
 const RES={
  bois:{n:'Bois',i:'🪵',p:1},pierre:{n:'Pierre',i:'🪨',p:1.5},sable:{n:'Sable',i:'⏳',p:1.5},
@@ -149,7 +149,7 @@ const sum=o=>Object.values(o).reduce((a,b)=>a+(+b||0),0);
 /* ====================== SAUVEGARDE ======================
    Clé fixe "industrie_save", jamais supprimée. Les nouvelles versions du jeu
    ajoutent leurs champs par fusion avec fresh() : rien n'est effacé.
-   5 copies de secours tournantes + export fichier + OneDrive. */
+   5 copies de secours tournantes + export fichier + synchro GitHub. */
 const KEY='industrie_save',BAK='industrie_secours',OLD='industrie_v1';
 function fresh(){return{ver:2,appv:APP_V,t:Date.now(),act:0,money:50,
  res:Object.fromEntries([...Object.keys(RES),...Object.keys(PROD)].map(k=>[k,0])),
@@ -308,10 +308,11 @@ succes(){
  return h},
 reglages(){
  const bk=backups();
- let h=`<h2>☁️ Sauvegarde OneDrive</h2><div class="card" style="--c:var(--blue)"><div class="sub">Partage la partie entre le PC et l'iPhone. La progression la plus avancée est toujours conservée.</div>
- <div class="sub" style="margin-top:8px">Identifiant d'application (Azure) :</div><input type="text" id="cid" value="${CFG.cid||''}" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off" autocapitalize="off" spellcheck="false">
+ let h=`<h2>☁️ Synchro PC ⇄ iPhone (GitHub)</h2><div class="card" style="--c:var(--blue)"><div class="sub">Partage la partie entre vos appareils via un dépôt GitHub privé. La partie la plus avancée est toujours gardée, l'autre part en copie de secours.</div>
+ <div class="sub" style="margin-top:8px">Dépôt privé :</div><input type="text" id="grepo" value="${CFG.repo}" autocomplete="off" autocapitalize="off" spellcheck="false">
+ <div class="sub" style="margin-top:8px">Jeton d'accès GitHub :</div><input type="text" id="gtok" value="${CFG.tok?'••••••••'+CFG.tok.slice(-4):''}" placeholder="github_pat_…" autocomplete="off" autocapitalize="off" spellcheck="false">
  <div class="sub" style="margin-top:8px">État : ${V('cl','')}</div>
- <div class="btns">${CFG.rt?`<button class="b g" data-a="csync">🔄 Synchroniser</button><button class="b t" data-a="cout">Déconnecter</button>`:`<button class="b" data-a="cin" ${CFG.cid?'':'disabled'}>🔑 Connecter OneDrive</button>`}</div></div>
+ <div class="btns">${CFG.tok?`<button class="b g" data-a="csync">🔄 Synchroniser</button><button class="b t" data-a="cout">Retirer le jeton</button>`:''}</div></div>
  <h2>💾 Sauvegarde locale</h2><div class="card" style="--c:var(--green)"><div class="sub">Sauvegarde automatique toutes les 5 s, jamais effacée par une mise à jour. Une copie de secours est faite toutes les 15 min et avant chaque mise à jour.</div>
  <div class="btns"><button class="b" data-a="exp">⬇️ Exporter un fichier</button><button class="b t" data-a="imp">⬆️ Importer un fichier</button></div></div>
  <h2>🛟 Copies de secours</h2>`;
@@ -337,7 +338,7 @@ function render(force){
  m.querySelectorAll('[data-w]').forEach(e=>{const p=bars[e.dataset.w];if(p!==undefined)e.style.width=p+'%'});
  document.getElementById('money').textContent=fmt(S.money)+' €';
  const nj=Object.keys(S.job).length;document.getElementById('runst').textContent=nj?`⚙️ ${nj} production${nj>1?'s':''} en cours`:'';
- document.getElementById('cloudst').textContent=CFG.rt?(syncing?'☁️ synchro…':'☁️ OneDrive'+(CFG.last?' · '+new Date(CFG.last).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'')):'';
+ document.getElementById('cloudst').textContent=CFG.tok?(syncing?'☁️ synchro…':'☁️ GitHub'+(CFG.last?' · '+new Date(CFG.last).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'')):'';
  chips();
  dots.commandes=S.ct.filter(c=>S.res[c.p]>=c.q).length;
  document.querySelectorAll('nav button').forEach(b=>{b.classList.toggle('on',b.dataset.tab===tab);const d=dots[b.dataset.tab];b.querySelector('.dot').textContent=d||'';b.querySelector('.dot').style.display=d?'':'none'});
@@ -369,15 +370,15 @@ document.addEventListener('click',e=>{
  case'exp':exportSave();break;
  case'imp':document.getElementById('fimport').click();break;
  case'restore':{const b=backups()[i];if(b&&confirm('Restaurer la copie du '+new Date(b.at).toLocaleString('fr-FR')+' ?\n(la partie actuelle est d\'abord mise en copie de secours)')){const raw=b.raw;backup('avant restauration');S=parseSave(raw);S.t=Date.now();S.act=Date.now();toast('🛟 Copie restaurée')}}break;
- case'cin':login();return;
- case'cout':if(confirm('Déconnecter OneDrive sur cet appareil ? (la partie reste ici et sur OneDrive)')){CFG={cid:CFG.cid};cfgSave();cloudMsg='déconnecté'}break;
+  case'cout':if(confirm('Retirer le jeton sur cet appareil ? (la partie reste ici et sur GitHub)')){delete CFG.tok;cfgSave();cloudMsg='non connecté'}break;
  case'csync':sync(true);break;
  }
  if(a!=='gather')S.act=Date.now();
  tick(Date.now());checkAch();save();render(true);
 });
 document.addEventListener('change',e=>{
- if(e.target.id==='cid'){CFG.cid=e.target.value.trim();cfgSave();render(true)}
+ if(e.target.id==='grepo'){CFG.repo=e.target.value.trim();cfgSave();render(true)}
+ if(e.target.id==='gtok'){const v=e.target.value.trim();if(v&&!v.startsWith('••')){CFG.tok=v;cfgSave();cloudMsg='connexion…';sync(true)}}
  if(e.target.id==='fimport'){const f=e.target.files[0];if(!f)return;f.text().then(txt=>{
   const n=parseSave(txt);if(confirm(`Importer cette partie (score ${fmt(score(n))}) ?\nLa partie actuelle (score ${fmt(score(S))}) sera mise en copie de secours.`)){backup('avant import');S=n;S.act=Date.now();save();toast('⬆️ Partie importée');catchUp();render(true)}
  }).catch(err=>toast('⚠️ Import impossible : '+err.message));e.target.value=''}
@@ -385,58 +386,41 @@ document.addEventListener('change',e=>{
 function exportSave(){const blob=new Blob([ser()],{type:'application/json'}),a=document.createElement('a');
  a.href=URL.createObjectURL(blob);a.download='industrie-sauvegarde-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
 
-/* ====================== ONEDRIVE (Microsoft Graph) ======================
-   Fichier : OneDrive > Applications > <nom de l'appli> > industrie-sauvegarde.json */
-const CFGK='industrie_onedrive',SCOPE='Files.ReadWrite.AppFolder offline_access',
- AUTH='https://login.microsoftonline.com/consumers/oauth2/v2.0/',
- FILE='https://graph.microsoft.com/v1.0/me/drive/special/approot:/industrie-sauvegarde.json:/content',
- REDIR=location.origin+location.pathname;
+/* ====================== SYNCHRO GITHUB ======================
+   Fichier sauvegarde.json dans un dépôt PRIVÉ (par défaut vmickey78/industrie-sauvegarde),
+   via un jeton d'accès limité à ce dépôt. GitHub garde aussi l'historique de chaque sauvegarde. */
+const CFGK='industrie_github';
 let CFG={};try{CFG=JSON.parse(localStorage.getItem(CFGK)||'{}')}catch(e){}
-let syncing=false,cloudMsg=CFG.rt?'connecté':'non connecté',upKey='';
+if(!CFG.repo)CFG.repo='vmickey78/industrie-sauvegarde';
+let syncing=false,cloudMsg=CFG.tok?'connecté':'non connecté',upKey='',lastUp=0;
 const cfgSave=()=>localStorage.setItem(CFGK,JSON.stringify(CFG));
-const b64u=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-async function login(){
- if(location.protocol==='file:'){toast('⚠️ OneDrive nécessite la version en ligne du jeu (https)');return}
- const v=b64u(crypto.getRandomValues(new Uint8Array(32))),st=b64u(crypto.getRandomValues(new Uint8Array(16)));
- const ch=b64u(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)));
- CFG.ver=v;CFG.state=st;cfgSave();save();
- location.href=AUTH+'authorize?'+new URLSearchParams({client_id:CFG.cid,response_type:'code',redirect_uri:REDIR,scope:SCOPE,code_challenge:ch,code_challenge_method:'S256',state:st,prompt:'select_account'});
-}
-async function tokenReq(body){
- const r=await fetch(AUTH+'token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:CFG.cid,scope:SCOPE,...body})});
- const j=await r.json();if(!r.ok){const e=new Error(j.error_description||j.error||('HTTP '+r.status));e.code=j.error;throw e}
- CFG.at=j.access_token;if(j.refresh_token)CFG.rt=j.refresh_token;CFG.exp=Date.now()+(j.expires_in-120)*1000;cfgSave()}
-async function getToken(){if(CFG.at&&Date.now()<CFG.exp)return CFG.at;
- try{await tokenReq({grant_type:'refresh_token',refresh_token:CFG.rt})}catch(e){if(e.code==='invalid_grant'){CFG.rt=null;CFG.at=null;cfgSave();cloudMsg='session expirée : touchez « Connecter OneDrive »'}throw e}
- return CFG.at}
-async function handleRedirect(){
- const p=new URLSearchParams(location.search);if(!p.get('code')&&!p.get('error'))return;
- history.replaceState({},'',REDIR);
- if(p.get('error')){cloudMsg='connexion refusée : '+(p.get('error_description')||p.get('error'));return}
- if(p.get('state')!==CFG.state){cloudMsg='connexion invalide, recommencez';return}
- try{await tokenReq({grant_type:'authorization_code',code:p.get('code'),redirect_uri:REDIR,code_verifier:CFG.ver});cloudMsg='connecté';toast('☁️ OneDrive connecté')}
- catch(e){cloudMsg='erreur : '+e.message}
-}
+const FILE=()=>`https://api.github.com/repos/${CFG.repo}/contents/sauvegarde.json`;
+const enc=t=>btoa(unescape(encodeURIComponent(t))),dec=b=>decodeURIComponent(escape(atob(b.replace(/\s/g,''))));
 async function sync(manual){
- if(!CFG.rt||!CFG.cid||syncing)return;syncing=true;render();
+ if(!CFG.tok||syncing)return;syncing=true;render();
+ const H={Authorization:'Bearer '+CFG.tok,Accept:'application/vnd.github+json'};
  try{
-  const tk=await getToken();
-  const r=await fetch(FILE,{headers:{Authorization:'Bearer '+tk},cache:'no-store'});
-  let remote=null;if(r.ok)remote=await r.json();else if(r.status!==404)throw new Error('lecture HTTP '+r.status);
+  const r=await fetch(FILE()+'?t='+Date.now(),{headers:H,cache:'no-store'});
+  let remote=null,sha=null;
+  if(r.ok){const j=await r.json();sha=j.sha;remote=JSON.parse(dec(j.content))}
+  else if(r.status===401)throw new Error('jeton refusé (expiré ou incorrect)');
+  else if(r.status!==404)throw new Error('lecture HTTP '+r.status);
   tick(Date.now());
-  if(remote&&remote.data){const R=migrate(remote.data),rs=score(R),ls=score(S);
-   if(rs>ls||(rs===ls&&(R.act||0)>(S.act||0))){backup('avant synchro OneDrive');S=R;tick(Date.now());save();toast('☁️ Progression récupérée depuis OneDrive');lastH=''}}
+  let rsc=-1;
+  if(remote&&remote.data){const R=migrate(remote.data);rsc=score(R);const ls=score(S);
+   if(rsc>ls||(rsc===ls&&(R.act||0)>(S.act||0))){backup('avant synchro GitHub');S=R;tick(Date.now());save();toast('☁️ Progression récupérée depuis GitHub');lastH='';rsc=score(S);upKey=score(S)+'|'+S.act}}
   const key=score(S)+'|'+S.act;
-  if(manual||!remote||key!==upKey||!remote.data||score(migrate(remote.data))<score(S)){
-   const w=await fetch(FILE,{method:'PUT',headers:{Authorization:'Bearer '+tk,'Content-Type':'application/json'},body:ser()});
-   if(!w.ok)throw new Error('écriture HTTP '+w.status);upKey=key}
+  if(manual||!remote||(key!==upKey&&(score(S)>rsc||Date.now()-lastUp>120e3))){
+   const w=await fetch(FILE(),{method:'PUT',headers:H,body:JSON.stringify({message:'Sauvegarde '+new Date().toLocaleString('fr-FR')+' (score '+score(S)+')',content:enc(ser()),...(sha?{sha}:{})})});
+   if(w.status===404)throw new Error('dépôt '+CFG.repo+' introuvable ou jeton sans accès');
+   if(!w.ok)throw new Error('écriture HTTP '+w.status);upKey=key;lastUp=Date.now()}
   CFG.last=Date.now();cfgSave();cloudMsg='synchronisé à '+new Date().toLocaleTimeString('fr-FR');if(manual)toast('☁️ Synchronisé')
- }catch(e){if(CFG.rt)cloudMsg='hors ligne ou erreur ('+e.message+')';if(manual)toast('⚠️ '+cloudMsg)}
+ }catch(e){cloudMsg='erreur : '+e.message;if(manual)toast('⚠️ '+cloudMsg)}
  syncing=false;render(true)}
 
 /* ====================== DÉMARRAGE ====================== */
 catchUp();checkAch();save();render(true);
-handleRedirect().then(()=>{render(true);sync()});
+sync();
 setInterval(()=>{tick(Date.now());checkAch();render()},1000);
 setInterval(save,5000);
 setInterval(()=>sync(),60000);
