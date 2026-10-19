@@ -1,0 +1,15 @@
+INDUSTRIE — jeu de gestion (v2.0.0)
+
+Fichiers : index.html (le jeu), sw.js + manifest.webmanifest + icônes (installation sur iPhone).
+
+SAUVEGARDE
+- Automatique toutes les 5 s dans l'appareil (clé "industrie_save"), jamais effacée par une mise à jour :
+  les nouvelles versions ajoutent leurs données sans toucher aux anciennes.
+- 5 copies de secours tournantes (toutes les 15 min, avant chaque mise à jour, import ou synchro) :
+  Réglages > Copies de secours > Restaurer.
+- Export / import d'un fichier .json (Réglages).
+- OneDrive : fichier OneDrive\Applications\Industrie\industrie-sauvegarde.json, partagé PC/iPhone.
+  En cas de différence, la partie la plus avancée (score) est gardée ; l'autre part en copie de secours.
+
+POUR JOUER SUR IPHONE
+Le jeu doit être en ligne (https). Une fois en ligne : Safari > Partager > « Sur l'écran d'accueil ».

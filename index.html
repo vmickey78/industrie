@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Industrie">
+<meta name="theme-color" content="#101722">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<title>Industrie</title>
+<style>
+:root{--bg:#0d131c;--card:#18212e;--line:#273244;--txt:#e8ecf3;--sub:#8d98ab;--gold:#f6c445;--green:#43c27f;--blue:#4b8df0;--orange:#ec8d3c;--purple:#a774ea;--pink:#e8698c;--cyan:#38c1d0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:radial-gradient(ellipse at top,#1a2638 0%,var(--bg) 60%) fixed;color:var(--txt);font-family:-apple-system,"Segoe UI",system-ui,sans-serif;min-height:100%}
+body{overflow-x:hidden;user-select:none;-webkit-user-select:none;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:5;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;background:linear-gradient(135deg,#1e2c42ee,#152031ee);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);box-shadow:0 4px 20px #0006}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{font-weight:800;font-size:15px;letter-spacing:.5px;color:#c9d4e6}
+.logo b{color:var(--gold)}
+.money{font-size:24px;font-weight:800;color:var(--gold);text-shadow:0 0 18px #f6c44555}
+.chips{display:flex;gap:6px;overflow-x:auto;margin-top:8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;background:#0d131c99;border:1px solid var(--line);border-radius:20px;padding:3px 9px;font-size:12px;color:#cdd5e2;white-space:nowrap}
+.cloud{font-size:12px;color:var(--sub)}
+main{padding:12px;max-width:760px;margin:0 auto}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:1.2px;color:var(--sub);margin:16px 4px 8px}
+.card{position:relative;background:linear-gradient(160deg,#1c2636,#161e2b);border:1px solid var(--line);border-left:4px solid var(--c,var(--blue));border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 3px 12px #0004;overflow:hidden}
+.card.off{opacity:.75}
+.head{display:flex;align-items:center;gap:12px}
+.ico{flex:none;width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:27px;background:radial-gradient(circle at 30% 30%,#ffffff22,#ffffff05);border:1px solid #ffffff12}
+.run .ico{animation:bob 1.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-3px) rotate(-4deg)}}
+.grow{flex:1;min-width:0}
+h3{margin:0;font-size:16px}
+.lv{font-size:11px;font-weight:700;background:#ffffff14;border-radius:8px;padding:1px 7px;margin-left:6px;color:#cfd8e6;vertical-align:2px}
+.sub{color:var(--sub);font-size:13px;margin-top:2px;line-height:1.45}
+.ok{color:var(--green)}.ko{color:#e0716b}
+.bar{height:9px;background:#0d131c;border-radius:6px;overflow:hidden;margin-top:9px;border:1px solid #ffffff0a}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--c,var(--green)),#ffffffaa);border-radius:6px;transition:width .9s linear}
+.btns{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+button{font:inherit}
+.b{background:linear-gradient(180deg,#5596f5,#3b78db);color:#fff;border:0;border-radius:10px;padding:9px 12px;font-size:14px;font-weight:600;box-shadow:0 2px 0 #24539a;cursor:pointer;touch-action:manipulation}
+.b:active{transform:translateY(2px);box-shadow:none}
+.b:disabled{background:#273244;color:#68748a;box-shadow:none}
+.b.g{background:linear-gradient(180deg,#4fcf8b,#2fa86a);box-shadow:0 2px 0 #1d7448}
+.b.y{background:linear-gradient(180deg,#e9b343,#c58d22);box-shadow:0 2px 0 #8a6215}
+.b.p{background:linear-gradient(180deg,#b386f0,#8d5ad8);box-shadow:0 2px 0 #5f379b}
+.b.t{background:#273244;box-shadow:none;color:#cfd8e6}
+.b.on{background:linear-gradient(180deg,#4fcf8b,#2fa86a);box-shadow:none}
+.b:disabled.g,.b:disabled.y,.b:disabled.p{background:#273244;color:#68748a;box-shadow:none}
+.b small{display:block;font-size:11px;font-weight:500;opacity:.85}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;background:#111a27f2;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:none;border:0;color:#76829a;padding:8px 0 7px;font-size:10px;position:relative;cursor:pointer}
+nav button span{display:block;font-size:21px;margin-bottom:1px;filter:grayscale(.7)}
+nav button.on{color:#fff}
+nav button.on span{filter:none;transform:scale(1.12)}
+nav .dot{position:absolute;top:5px;right:calc(50% - 18px);background:var(--pink);color:#fff;border-radius:8px;font-size:10px;padding:0 5px}
+#modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+#modal .card{max-width:420px;width:100%;--c:var(--gold)}
+#toast{position:fixed;left:50%;top:calc(90px + env(safe-area-inset-top));transform:translateX(-50%);z-index:30;display:flex;flex-direction:column;gap:6px;pointer-events:none;width:90%;max-width:400px}
+.tst{background:#1f2c40;border:1px solid var(--gold);color:#fff;padding:9px 14px;border-radius:12px;font-size:14px;box-shadow:0 6px 20px #0008;animation:tin .3s ease}
+@keyframes tin{from{opacity:0;transform:translateY(-10px)}}
+.pop{position:fixed;z-index:25;pointer-events:none;font-weight:800;color:var(--gold);font-size:18px;animation:pop 1s ease-out forwards;text-shadow:0 2px 6px #000}
+@keyframes pop{to{transform:translateY(-55px);opacity:0}}
+.scene{height:84px;border-radius:14px;margin-bottom:12px;position:relative;overflow:hidden;background:linear-gradient(180deg,#2b4a77 0%,#e3936055 85%,#3a2a2a 100%);border:1px solid var(--line)}
+.scene .sky{position:absolute;inset:0;display:flex;align-items:flex-end;gap:4px;padding:0 10px;font-size:30px}
+.smoke{position:absolute;width:12px;height:12px;border-radius:50%;background:#ffffff55;animation:smoke 3s linear infinite}
+@keyframes smoke{0%{transform:translate(0,0) scale(.5);opacity:.8}100%{transform:translate(18px,-60px) scale(2.4);opacity:0}}
+.scene .lbl{position:absolute;top:8px;left:12px;font-size:12px;color:#ffffffcc;text-shadow:0 1px 3px #000}
+input[type=text]{width:100%;background:#0d131c;border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:9px;font-size:14px;margin-top:6px;user-select:text;-webkit-user-select:text}
+.ach{display:flex;gap:10px;align-items:center}
+.ach .ico{width:40px;height:40px;font-size:21px}
+.lock{filter:grayscale(1);opacity:.5}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:7px;background:#ffffff12;margin:3px 3px 0 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><div><div class="logo">🏭 <b>INDUSTRIE</b></div><div class="money" id="money">0 €</div></div><div style="text-align:right"><div class="cloud" id="cloudst"></div><div class="cloud" id="runst"></div></div></div>
+  <div class="chips" id="chips"></div>
+</header>
+<main id="main"></main>
+<nav id="nav"></nav>
+<div id="modal"><div class="card"><h3 id="mtitle">Bon retour, monsieur</h3><div id="mbody" class="sub" style="margin:10px 0;line-height:1.7"></div><button class="b g" id="mok" style="width:100%">Continuer</button></div></div>
+<div id="toast"></div>
+<input type="file" id="fimport" accept=".json,application/json" style="display:none">
+<script>
+'use strict';
+const APP_V='2.0.0';
+/* ====================== DONNÉES DU JEU ====================== */
+const RES={
+ bois:{n:'Bois',i:'🪵',p:1},pierre:{n:'Pierre',i:'🪨',p:1.5},sable:{n:'Sable',i:'⏳',p:1.5},
+ charbon:{n:'Charbon',i:'⚫',p:2},fer:{n:'Minerai de fer',i:'🔘',p:4},cuivre:{n:'Minerai de cuivre',i:'🟤',p:6},or:{n:"Minerai d'or",i:'🟡',p:15}};
+const PROD={
+ planches:{n:'Planches',i:'📏',p:8},briques:{n:'Briques',i:'🧱',p:12},verre:{n:'Verre',i:'🪟',p:14},
+ lingots:{n:'Lingots de fer',i:'🔩',p:30},lingcu:{n:'Lingots de cuivre',i:'🥉',p:45},acier:{n:'Acier',i:'⚙️',p:130},
+ meubles:{n:'Meubles',i:'🪑',p:75},outils:{n:'Outils',i:'🔧',p:150},cables:{n:'Câbles',i:'🔌',p:110},
+ bijoux:{n:'Bijoux',i:'💍',p:120},circuits:{n:'Circuits',i:'💾',p:480},maisons:{n:'Maisons',i:'🏠',p:950}};
+const MINES={
+ bois:{n:'Bûcheron',i:'🪓',r:.5,c:20},pierre:{n:'Carrière',i:'⛰️',r:.4,c:40},sable:{n:'Sablière',i:'🏜️',r:.4,c:60},
+ charbon:{n:'Mine de charbon',i:'⛏️',r:.4,c:80},fer:{n:'Mine de fer',i:'🏔️',r:.3,c:150},
+ cuivre:{n:'Mine de cuivre',i:'🌋',r:.25,c:300},or:{n:"Mine d'or",i:'💰',r:.1,c:800}};
+const FACT={
+ scierie:{n:'Scierie',i:'🪚',c:150,t:20,in:{bois:2},out:'planches'},
+ briqueterie:{n:'Briqueterie',i:'🧱',c:300,t:25,in:{pierre:2,charbon:1},out:'briques'},
+ verrerie:{n:'Verrerie',i:'🔥',c:500,t:30,in:{sable:2,charbon:1},out:'verre'},
+ fonderie:{n:'Fonderie de fer',i:'🏭',c:600,t:30,in:{fer:2,charbon:1},out:'lingots'},
+ fondcu:{n:'Fonderie de cuivre',i:'🏭',c:1200,t:35,in:{cuivre:2,charbon:1},out:'lingcu'},
+ forge:{n:'Forge',i:'🔨',c:2500,t:60,in:{lingots:2,planches:2},out:'outils'},
+ acierie:{n:'Aciérie',i:'🌡️',c:3000,t:50,in:{lingots:2,charbon:2},out:'acier'},
+ menuiserie:{n:'Menuiserie',i:'🪑',c:4000,t:60,in:{planches:3,verre:1},out:'meubles'},
+ cablerie:{n:'Câblerie',i:'🔌',c:5000,t:40,in:{lingcu:2},out:'cables'},
+ orfevrerie:{n:'Orfèvrerie',i:'💎',c:6000,t:45,in:{or:1,charbon:1},out:'bijoux'},
+ electro:{n:'Usine électronique',i:'🖥️',c:12000,t:90,in:{cables:2,verre:1,or:1},out:'circuits'},
+ chantier:{n:'Chantier',i:'🏗️',c:25000,t:180,in:{briques:4,acier:2,verre:2,meubles:1},out:'maisons'}};
+const RSCH={
+ auto:{n:'Automatisation',i:'🔁',d:'Débloque la répétition des productions (elles se relancent seules, même hors ligne).',c:1000,max:1},
+ mine:{n:'Pioches renforcées',i:'⛏️',d:'+20 % de production des mines par niveau.',c:500,g:3,max:8},
+ fast:{n:'Chaînes de montage',i:'⚡',d:'+10 % de vitesse des usines par niveau.',c:1500,g:3,max:8},
+ vauto:{n:'Vente automatique',i:'💸',d:'Débloque la vente automatique de chaque produit dès sa fabrication.',c:2500,max:1},
+ sell:{n:'Négociation',i:'🤝',d:'+5 % sur tous les prix de vente par niveau.',c:2000,g:3,max:8},
+ contrat:{n:'Réseau commercial',i:'📇',d:'+1 commande disponible par niveau.',c:3000,g:4,max:3}};
+const ACH=[
+ {n:'Premier euro',i:'🪙',d:'Vendre quelque chose',f:s=>s.stat.sold>=1,r:10},
+ {n:'Petit patron',i:'👔',d:'Gagner 1 000 € au total',f:s=>s.stat.sold>=1e3,r:100},
+ {n:'Entrepreneur',i:'📈',d:'Gagner 10 000 € au total',f:s=>s.stat.sold>=1e4,r:500},
+ {n:'Magnat',i:'🎩',d:'Gagner 100 000 € au total',f:s=>s.stat.sold>=1e5,r:5000},
+ {n:'Empire industriel',i:'👑',d:'Gagner 1 000 000 € au total',f:s=>s.stat.sold>=1e6,r:50000},
+ {n:'Industriel',i:'🏭',d:'Construire une première usine',f:s=>Object.keys(s.fact).length>=1,r:50},
+ {n:'Zone industrielle',i:'🏙️',d:'Construire 6 usines',f:s=>Object.keys(s.fact).length>=6,r:2000},
+ {n:'Toutes les usines',i:'🌆',d:'Construire les 12 usines',f:s=>Object.keys(s.fact).length>=12,r:20000},
+ {n:'Prospecteur',i:'🗺️',d:'Ouvrir les 7 types de mines',f:s=>Object.values(s.mine).every(v=>v>0),r:500},
+ {n:'Mineur chevronné',i:'⛏️',d:'Atteindre 50 niveaux de mines au total',f:s=>sum(s.mine)>=50,r:1500},
+ {n:'Fournisseur',i:'📦',d:'Honorer 10 commandes',f:s=>s.stat.ct>=10,r:1000},
+ {n:'Partenaire officiel',i:'🤝',d:'Honorer 50 commandes',f:s=>s.stat.ct>=50,r:10000},
+ {n:'Chercheur',i:'🔬',d:'Acheter 5 niveaux de recherche',f:s=>sum(s.rs)>=5,r:1500},
+ {n:'Usine autonome',i:'🤖',d:'Débloquer automatisation et vente automatique',f:s=>s.rs.auto&&s.rs.vauto,r:1000},
+ {n:'Bâtisseur',i:'🏠',d:'Fabriquer une maison',f:s=>(s.stat.by.maisons||0)>=1,r:5000},
+ {n:'Production de masse',i:'🏗️',d:'Fabriquer 10 000 objets',f:s=>s.stat.made>=1e4,r:25000}];
+
+const OUT2F={};for(const f in FACT)OUT2F[FACT[f].out]=f;
+const N=k=>RES[k]||PROD[k];
+const sum=o=>Object.values(o).reduce((a,b)=>a+(+b||0),0);
+
+/* ====================== SAUVEGARDE ======================
+   Clé fixe "industrie_save", jamais supprimée. Les nouvelles versions du jeu
+   ajoutent leurs champs par fusion avec fresh() : rien n'est effacé.
+   5 copies de secours tournantes + export fichier + OneDrive. */
+const KEY='industrie_save',BAK='industrie_secours',OLD='industrie_v1';
+function fresh(){return{ver:2,appv:APP_V,t:Date.now(),act:0,money:50,
+ res:Object.fromEntries([...Object.keys(RES),...Object.keys(PROD)].map(k=>[k,0])),
+ mine:Object.fromEntries(Object.keys(MINES).map(k=>[k,0])),fact:{},job:{},rep:{},auto:{},
+ cap:0,rs:Object.fromEntries(Object.keys(RSCH).map(k=>[k,0])),ct:[],ach:{},
+ stat:{sold:0,made:0,ct:0,by:{}},lastBak:0}}
+function merge(def,src){if(!src||typeof src!=='object'||Array.isArray(def))return src===undefined?def:src;
+ const o={...def};for(const k in src)o[k]=(k in def&&def[k]&&typeof def[k]==='object'&&!Array.isArray(def[k]))?merge(def[k],src[k]):src[k];return o}
+function migrate(d){
+ // v1 (premier prototype) → v2 : mêmes identifiants, simple fusion
+ if(!d.ver||d.ver<2){d.ver=2;d.stat=d.stat||{};}
+ return merge(fresh(),d);
+}
+function ser(){return JSON.stringify({jeu:'industrie',v:2,app:APP_V,savedAt:Date.now(),score:score(S),data:S})}
+function parseSave(txt){const o=JSON.parse(txt);const d=o&&o.data?o.data:o;if(!d||typeof d!=='object'||!d.res)throw new Error('fichier invalide');return migrate(d)}
+function backups(){try{return JSON.parse(localStorage.getItem(BAK)||'[]')}catch(e){return[]}}
+function backup(why){try{const a=backups();a.unshift({at:Date.now(),why,raw:ser()});localStorage.setItem(BAK,JSON.stringify(a.slice(0,5)));S.lastBak=Date.now()}catch(e){}}
+function load(){
+ for(const k of[KEY,OLD]){const raw=localStorage.getItem(k);if(!raw)continue;
+  try{return parseSave(raw)}catch(e){localStorage.setItem('industrie_corrompu_'+Date.now(),raw)}}
+ for(const b of backups()){try{return parseSave(b.raw)}catch(e){}}
+ return fresh()}
+function save(){try{localStorage.setItem(KEY,ser())}catch(e){toast('⚠️ Sauvegarde impossible : '+e.message)}
+ if(Date.now()-S.lastBak>15*60e3)backup('automatique')}
+function score(s){return Math.round(s.stat.sold+s.stat.made*10+sum(s.mine)*100+sum(s.fact)*500+sum(s.rs)*1000+s.stat.ct*100)}
+
+let S=load();
+if(S.appv!==APP_V){backup('avant mise à jour '+APP_V);S.appv=APP_V;setTimeout(()=>toast('✨ Mise à jour '+APP_V+' installée — sauvegarde conservée'),800)}
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
+
+/* ====================== RÈGLES ====================== */
+const capOf=()=>500*Math.pow(2,S.cap);
+const capCost=()=>Math.round(200*Math.pow(3,S.cap));
+const mineMult=()=>1+.2*S.rs.mine;
+const mineCost=(k,n=1)=>{let c=0;for(let i=0;i<n;i++)c+=Math.round(MINES[k].c*Math.pow(1.15,S.mine[k]+i));return c};
+const factSpeed=f=>(1+.25*((S.fact[f]||1)-1))*(1+.1*S.rs.fast);
+const factUp=f=>Math.round(FACT[f].c*Math.pow(1.8,S.fact[f]||1));
+const rsCost=k=>Math.round(RSCH[k].c*Math.pow(RSCH[k].g||1,S.rs[k]));
+const nbCt=()=>3+S.rs.contrat;
+function price(k,at=Date.now()){const h=at/36e5;return Math.max(1,Math.round(N(k).p*(1+.15*Math.sin(h*1.3+k.length*1.7))*(1+.05*S.rs.sell)))}
+const maxQ=f=>Math.floor(Math.min(...Object.entries(FACT[f].in).map(([r,n])=>S.res[r]/n)));
+const fmt=n=>{n=Math.floor(n);return n>=1e9?(n/1e9).toFixed(2)+' Md':n>=1e6?(n/1e6).toFixed(2)+' M':n>=1e5?(n/1e3).toFixed(0)+' k':n.toLocaleString('fr-FR')};
+const dur=s=>{s=Math.max(0,Math.ceil(s));const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return d?d+' j '+h+' h':h?h+' h '+m+' min':m?m+' min '+(s%60)+' s':s+' s'};
+
+let L=null; // journal pendant l'absence
+function deliver(f,q,at){const o=FACT[f].out;S.stat.made+=q;S.stat.by[o]=(S.stat.by[o]||0)+q;
+ if(L)L.made[o]=(L.made[o]||0)+q;
+ if(S.rs.vauto&&S.auto[o]){const g=q*price(o,at);S.money+=g;S.stat.sold+=g;if(L)L.sold+=g}else S.res[o]+=q}
+function startJob(f,q,at,rep){q=Math.min(q,maxQ(f));if(q<1)return false;
+ for(const[r,n]of Object.entries(FACT[f].in))S.res[r]-=n*q;
+ S.job[f]={q,q0:rep&&S.job[f]?S.job[f].q0:q,start:at,end:at+q*FACT[f].t/factSpeed(f)*1000,rep:!!rep};return true}
+// Hors ligne, le temps est rejoué par tranches : les mines réapprovisionnent les usines au fil de l'eau.
+function tick(now){const sz=Math.max(60e3,(now-S.t)/3000);while(now-S.t>sz)step(S.t+sz);step(now)}
+function step(now){
+ const dt=Math.max(0,(now-S.t)/1000);
+ for(const k in MINES)if(S.res[k]<capOf())S.res[k]=Math.min(capOf(),S.res[k]+MINES[k].r*S.mine[k]*mineMult()*dt);
+ for(const f in S.job){let g=0;
+  while(S.job[f]&&S.job[f].end<=now&&g++<20000){const j=S.job[f];deliver(f,j.q,j.end);
+   const q0=j.q0||j.q;
+   if(!(j.rep&&S.rs.auto&&S.rep[f]&&startJob(f,q0,j.end,true))){delete S.job[f];if(j.rep&&L)L.stop.push(FACT[f].n)}
+   else S.job[f].q0=q0}}
+ while(S.ct.length<nbCt()){const c=genContract();if(!c)break;S.ct.push(c)}
+ S.t=now;
+}
+function genContract(){
+ const opts=Object.keys(PROD).filter(p=>S.fact[OUT2F[p]]);if(!opts.length)return null;
+ const p=opts[Math.floor(Math.random()*opts.length)],f=OUT2F[p],t=FACT[f].t/factSpeed(f);
+ const q=Math.max(2,Math.round((120+Math.random()*480)/t));
+ return{p,q,rw:Math.round(q*PROD[p].p*(1.4+Math.random()*.5))}}
+function checkAch(){ACH.forEach((a,i)=>{if(!S.ach[i]&&a.f(S)){S.ach[i]=Date.now();S.money+=a.r;toast(`🏆 Succès : ${a.n} (+${fmt(a.r)} €)`);dots.succes=(dots.succes||0)+1}})}
+
+function catchUp(){
+ const away=(Date.now()-S.t)/1000,before={...S.res};L={made:{},sold:0,stop:[]};
+ tick(Date.now());const l=L;L=null;
+ if(away<60)return;
+ const lines=[];
+ for(const k in RES){const d=S.res[k]-before[k];if(d>=1)lines.push(`${RES[k].i} +${fmt(d)} ${RES[k].n}`)}
+ for(const k in l.made)lines.push(`${PROD[k].i} ${fmt(l.made[k])} ${PROD[k].n} fabriqués`);
+ if(l.sold)lines.push(`💸 Ventes automatiques : <b class="ok">+${fmt(l.sold)} €</b>`);
+ for(const n of new Set(l.stop))lines.push(`<span class="ko">⏸ ${n} : arrêtée faute de matières</span>`);
+ for(const f in S.job)lines.push(`⏳ ${FACT[f].n} : encore ${dur((S.job[f].end-Date.now())/1000)}`);
+ document.getElementById('mtitle').textContent='Bon retour, monsieur';
+ document.getElementById('mbody').innerHTML=`Absent <b>${dur(away)}</b>.<br>`+(lines.join('<br>')||'Rien de neuf : lancez des productions avant de partir !');
+ document.getElementById('modal').style.display='flex';
+}
+document.getElementById('mok').onclick=()=>document.getElementById('modal').style.display='none';
+
+/* ====================== AFFICHAGE ====================== */
+const TABS={mines:['⛏️','Mines'],usines:['🏭','Usines'],commandes:['📋','Commandes'],marche:['💰','Marché'],recherche:['🔬','Recherche'],succes:['🏆','Succès'],reglages:['⚙️','Réglages']};
+let tab='mines',lastH='',cur={},bars={};const dots={};
+const V=(k,t)=>{cur[k]=t;return`<span data-v="${k}"></span>`};
+const B=(k,p,c)=>{bars[k]=Math.max(0,Math.min(100,p));return`<div class="bar"><i data-w="${k}"></i></div>`};
+const ing=(f,q=1)=>Object.entries(FACT[f].in).map(([r,n])=>`<span class="tag">${N(r).i} ${n*q} ${N(r).n}</span>`).join('');
+
+const VIEW={
+mines(){
+ let h=`<div class="scene"><div class="lbl">${sum(S.mine)} niveaux de mines · ${fmt(Object.keys(MINES).reduce((a,k)=>a+MINES[k].r*S.mine[k]*mineMult()*60,0))} ressources/min</div><div class="sky">`+
+  Object.keys(MINES).filter(k=>S.mine[k]).map(k=>MINES[k].i).join('')+`🌲🌲</div></div><h2>Exploitations</h2>`;
+ for(const k in MINES){const m=MINES[k],lv=S.mine[k],c=mineCost(k),c10=mineCost(k,10),r=m.r*lv*mineMult();
+  h+=`<div class="card ${lv?'run':'off'}" style="--c:var(--green)"><div class="head"><div class="ico">${m.i}</div><div class="grow"><h3>${m.n}<span class="lv">niv. ${lv}</span></h3>
+  <div class="sub">${RES[k].i} ${RES[k].n} : <b>${V('r'+k,'')}</b> / ${fmt(capOf())} · ${lv?'+'+(r*60).toFixed(r*60<10?1:0)+' /min':'à construire'}</div></div></div>
+  ${B('b'+k,S.res[k]/capOf()*100)}
+  <div class="btns"><button class="b g" data-a="gather" data-k="${k}">✋ Récolter</button>
+  <button class="b" data-a="mine" data-k="${k}" data-n="1" ${S.money<c?'disabled':''}>${lv?'Améliorer':'Construire'}<small>${fmt(c)} €</small></button>
+  ${lv?`<button class="b t" data-a="mine" data-k="${k}" data-n="10" ${S.money<c10?'disabled':''}>×10<small>${fmt(c10)} €</small></button>`:''}</div></div>`}
+ const cc=capCost();
+ h+=`<div class="card" style="--c:var(--gold)"><div class="head"><div class="ico">🏬</div><div class="grow"><h3>Entrepôt<span class="lv">niv. ${S.cap}</span></h3><div class="sub">Stock max par ressource brute : ${fmt(capOf())}. Indispensable pour les longues absences.</div></div></div>
+ <div class="btns"><button class="b y" data-a="cap" ${S.money<cc?'disabled':''}>Doubler la capacité<small>${fmt(cc)} €</small></button></div></div>`;
+ return h},
+usines(){
+ const now=Date.now();let h='',n=0;
+ for(const f in FACT){const F=FACT[f],lv=S.fact[f]||0,j=S.job[f],o=PROD[F.out];
+  if(!lv){if(n++>1)continue;
+   h+=`<div class="card off" style="--c:var(--orange)"><div class="head"><div class="ico">${F.i}</div><div class="grow"><h3>${F.n}</h3><div class="sub">Fabrique ${o.i} ${o.n} (≈ ${o.p} €)</div></div></div><div>${ing(f)}</div>
+   <div class="btns"><button class="b y" data-a="buildf" data-k="${f}" ${S.money<F.c?'disabled':''}>🏗️ Construire<small>${fmt(F.c)} €</small></button></div></div>`;continue}
+  const t=F.t/factSpeed(f),mx=maxQ(f);
+  h+=`<div class="card ${j?'run':''}" style="--c:var(--orange)"><div class="head"><div class="ico">${F.i}</div><div class="grow"><h3>${F.n}<span class="lv">niv. ${lv}</span></h3>
+  <div class="sub">→ ${o.i} ${o.n} · ${dur(t)} / unité · stock ${V('s'+f,'')}</div></div></div><div>${ing(f)}</div>`;
+  if(j)h+=`<div class="sub ok" style="margin-top:7px">⚙️ ${j.q} × ${o.n} en cours · reste ${V('j'+f,'')}${j.rep?' · 🔁':''}</div>${B('jb'+f,0)}`;
+  else h+=`<div class="btns">`+[1,10,100].map(q=>`<button class="b g" data-a="start" data-k="${f}" data-q="${q}" ${mx<q?'disabled':''}>×${q}<small>${dur(q*t)}</small></button>`).join('')+
+   `<button class="b g" data-a="start" data-k="${f}" data-q="${mx}" ${mx<1?'disabled':''}>Max ${mx>0?fmt(mx):''}<small>${mx>0?dur(mx*t):'—'}</small></button></div>`;
+  h+=`<div class="btns">${S.rs.auto?`<button class="b ${S.rep[f]?'on':'t'}" data-a="rep" data-k="${f}">🔁 Répéter : ${S.rep[f]?'oui':'non'}</button>`:''}
+  <button class="b y" data-a="upf" data-k="${f}" ${S.money<factUp(f)?'disabled':''}>⚡ +25 % vitesse<small>${fmt(factUp(f))} €</small></button></div></div>`}
+ if(!Object.keys(S.fact).length)h=`<div class="sub" style="margin:4px 4px 10px">Vendez vos matières premières au Marché pour financer votre première usine.</div>`+h;
+ return`<h2>Vos usines</h2>`+h},
+commandes(){
+ let h=`<h2>Commandes de clients</h2><div class="sub" style="margin:0 4px 10px">Payées bien mieux que le marché. ${nbCt()} commandes en même temps.</div>`;
+ if(!S.ct.length)h+=`<div class="card"><div class="sub">Construisez une usine pour recevoir des commandes.</div></div>`;
+ S.ct.forEach((c,i)=>{const p=PROD[c.p],ok=S.res[c.p]>=c.q;
+  h+=`<div class="card" style="--c:var(--cyan)"><div class="head"><div class="ico">${p.i}</div><div class="grow"><h3>${c.q} × ${p.n}</h3>
+  <div class="sub">Récompense <b style="color:var(--gold)">${fmt(c.rw)} €</b> · en stock ${V('c'+i,'')}</div></div></div>
+  <div class="btns"><button class="b g" data-a="ctdo" data-i="${i}" ${ok?'':'disabled'}>📦 Livrer</button><button class="b t" data-a="ctnew" data-i="${i}">🔄 Autre commande</button></div></div>`});
+ return h+`<div class="sub" style="text-align:center">Commandes honorées : ${S.stat.ct}</div>`},
+marche(){
+ let h=`<h2>Produits finis</h2><div class="btns" style="margin:0 0 10px"><button class="b y" data-a="sellall">💰 Tout vendre (produits)</button></div>`;
+ for(const k in PROD){if(!S.fact[OUT2F[k]]&&S.res[k]<1)continue;const p=price(k),up=p>=PROD[k].p*(1+.05*S.rs.sell),n=Math.floor(S.res[k]);
+  h+=`<div class="card" style="--c:var(--gold)"><div class="head"><div class="ico">${PROD[k].i}</div><div class="grow"><h3>${PROD[k].n}</h3>
+  <div class="sub">Stock ${V('m'+k,'')} · ${p} €/u <span class="${up?'ok':'ko'}">${up?'▲':'▼'}</span></div></div>
+  <button class="b g" data-a="sell" data-k="${k}" ${n<1?'disabled':''}>Vendre<small>${V('mv'+k,'')} €</small></button></div>
+  ${S.rs.vauto?`<div class="btns"><button class="b ${S.auto[k]?'on':'t'}" data-a="auto" data-k="${k}">💸 Vente auto : ${S.auto[k]?'oui':'non'}</button></div>`:''}</div>`}
+ h+=`<h2>Matières premières</h2>`;
+ for(const k in RES){const p=price(k),n=Math.floor(S.res[k]);
+  h+=`<div class="card" style="--c:var(--green)"><div class="head"><div class="ico">${RES[k].i}</div><div class="grow"><h3>${RES[k].n}</h3><div class="sub">Stock ${V('m'+k,'')} · ${p} €/u</div></div>
+  <button class="b g" data-a="sell" data-k="${k}" ${n<1?'disabled':''}>Vendre<small>${V('mv'+k,'')} €</small></button></div></div>`}
+ return h+`<div class="sub" style="text-align:center">Les prix varient au fil des heures. Total gagné : ${fmt(S.stat.sold)} €</div>`},
+recherche(){
+ let h=`<h2>Laboratoire</h2>`;
+ for(const k in RSCH){const r=RSCH[k],lv=S.rs[k],mx=lv>=r.max,c=rsCost(k);
+  h+=`<div class="card ${mx?'':'off'}" style="--c:var(--purple);opacity:1"><div class="head"><div class="ico">${r.i}</div><div class="grow"><h3>${r.n}${r.max>1?`<span class="lv">${lv}/${r.max}</span>`:''}</h3><div class="sub">${r.d}</div></div></div>
+  <div class="btns">${mx?`<span class="ok">✅ ${r.max>1?'Niveau maximum':'Acquis'}</span>`:`<button class="b p" data-a="rs" data-k="${k}" ${S.money<c?'disabled':''}>🔬 Rechercher<small>${fmt(c)} €</small></button>`}</div></div>`}
+ return h},
+succes(){
+ const n=Object.keys(S.ach).length;let h=`<h2>Succès · ${n}/${ACH.length}</h2>`;
+ ACH.forEach((a,i)=>{const ok=S.ach[i];h+=`<div class="card ach" style="--c:var(--pink)"><div class="ico ${ok?'':'lock'}">${a.i}</div><div class="grow"><h3>${a.n}</h3><div class="sub">${a.d} · récompense ${fmt(a.r)} €</div></div><div>${ok?'✅':'🔒'}</div></div>`});
+ const st=S.stat;h+=`<h2>Statistiques</h2><div class="card"><div class="sub">Objets fabriqués : ${fmt(st.made)}<br>Argent gagné : ${fmt(st.sold)} €<br>Commandes : ${st.ct}<br>Score : ${fmt(score(S))}</div></div>`;
+ return h},
+reglages(){
+ const bk=backups();
+ let h=`<h2>☁️ Sauvegarde OneDrive</h2><div class="card" style="--c:var(--blue)"><div class="sub">Partage la partie entre le PC et l'iPhone. La progression la plus avancée est toujours conservée.</div>
+ <div class="sub" style="margin-top:8px">Identifiant d'application (Azure) :</div><input type="text" id="cid" value="${CFG.cid||''}" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off" autocapitalize="off" spellcheck="false">
+ <div class="sub" style="margin-top:8px">État : ${V('cl','')}</div>
+ <div class="btns">${CFG.rt?`<button class="b g" data-a="csync">🔄 Synchroniser</button><button class="b t" data-a="cout">Déconnecter</button>`:`<button class="b" data-a="cin" ${CFG.cid?'':'disabled'}>🔑 Connecter OneDrive</button>`}</div></div>
+ <h2>💾 Sauvegarde locale</h2><div class="card" style="--c:var(--green)"><div class="sub">Sauvegarde automatique toutes les 5 s, jamais effacée par une mise à jour. Une copie de secours est faite toutes les 15 min et avant chaque mise à jour.</div>
+ <div class="btns"><button class="b" data-a="exp">⬇️ Exporter un fichier</button><button class="b t" data-a="imp">⬆️ Importer un fichier</button></div></div>
+ <h2>🛟 Copies de secours</h2>`;
+ if(!bk.length)h+=`<div class="card"><div class="sub">Aucune pour l'instant.</div></div>`;
+ bk.forEach((b,i)=>{let sc='?';try{sc=fmt(JSON.parse(b.raw).score)}catch(e){}
+  h+=`<div class="card" style="--c:#56627a"><div class="head"><div class="grow"><h3 style="font-size:14px">${new Date(b.at).toLocaleString('fr-FR')}</h3><div class="sub">${b.why} · score ${sc}</div></div><button class="b t" data-a="restore" data-i="${i}">Restaurer</button></div></div>`});
+ return h+`<div class="sub" style="text-align:center;margin-top:10px">Industrie v${APP_V}</div>`}
+};
+
+function chips(){const el=document.getElementById('chips');
+ el.innerHTML=Object.keys(RES).filter(k=>S.mine[k]||S.res[k]>=1).map(k=>`<span class="chip">${RES[k].i} ${fmt(S.res[k])}</span>`).join('')+
+  Object.keys(PROD).filter(k=>S.res[k]>=1).map(k=>`<span class="chip">${PROD[k].i} ${fmt(S.res[k])}</span>`).join('')}
+function render(force){
+ cur={};bars={};const h=VIEW[tab](),m=document.getElementById('main');
+ if(force||h!==lastH){m.innerHTML=h;lastH=h}
+ const now=Date.now();
+ for(const k in RES){cur['r'+k]=fmt(S.res[k])}
+ for(const k of[...Object.keys(RES),...Object.keys(PROD)]){cur['m'+k]=fmt(S.res[k]);cur['mv'+k]=fmt(Math.floor(S.res[k])*price(k))}
+ for(const f in FACT){cur['s'+f]=fmt(S.res[FACT[f].out]);const j=S.job[f];if(j){cur['j'+f]=dur((j.end-now)/1000);bars['jb'+f]=(now-j.start)/(j.end-j.start)*100}}
+ S.ct.forEach((c,i)=>cur['c'+i]=`<span class="${S.res[c.p]>=c.q?'ok':'ko'}">${fmt(S.res[c.p])} / ${c.q}</span>`);
+ cur.cl=cloudMsg;
+ m.querySelectorAll('[data-v]').forEach(e=>{const t=cur[e.dataset.v];if(t!==undefined&&e.innerHTML!==t)e.innerHTML=t});
+ m.querySelectorAll('[data-w]').forEach(e=>{const p=bars[e.dataset.w];if(p!==undefined)e.style.width=p+'%'});
+ document.getElementById('money').textContent=fmt(S.money)+' €';
+ const nj=Object.keys(S.job).length;document.getElementById('runst').textContent=nj?`⚙️ ${nj} production${nj>1?'s':''} en cours`:'';
+ document.getElementById('cloudst').textContent=CFG.rt?(syncing?'☁️ synchro…':'☁️ OneDrive'+(CFG.last?' · '+new Date(CFG.last).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'')):'';
+ chips();
+ dots.commandes=S.ct.filter(c=>S.res[c.p]>=c.q).length;
+ document.querySelectorAll('nav button').forEach(b=>{b.classList.toggle('on',b.dataset.tab===tab);const d=dots[b.dataset.tab];b.querySelector('.dot').textContent=d||'';b.querySelector('.dot').style.display=d?'':'none'});
+}
+document.getElementById('nav').innerHTML=Object.entries(TABS).map(([k,[i,n]])=>`<button data-tab="${k}"><span>${i}</span>${n}<b class="dot"></b></button>`).join('');
+
+function toast(t){const e=document.createElement('div');e.className='tst';e.innerHTML=t;document.getElementById('toast').appendChild(e);setTimeout(()=>e.remove(),3500)}
+function pop(x,y,t){const e=document.createElement('div');e.className='pop';e.textContent=t;e.style.left=(x-10)+'px';e.style.top=(y-20)+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1000)}
+
+/* ====================== ACTIONS ====================== */
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-tab],[data-a]');if(!t||t.disabled)return;
+ if(t.dataset.tab){tab=t.dataset.tab;if(tab==='succes')dots.succes=0;scrollTo(0,0);render(true);return}
+ const{k,a}=t.dataset,i=+t.dataset.i;tick(Date.now());
+ switch(a){
+ case'gather':if(S.res[k]<capOf()){S.res[k]+=1+S.mine[k]*.1;pop(e.clientX,e.clientY,'+'+(1+S.mine[k]*.1).toFixed(S.mine[k]?1:0)+' '+RES[k].i)}break;
+ case'mine':{const n=+t.dataset.n,c=mineCost(k,n);if(S.money>=c){S.money-=c;S.mine[k]+=n}}break;
+ case'cap':if(S.money>=capCost()){S.money-=capCost();S.cap++}break;
+ case'buildf':if(S.money>=FACT[k].c){S.money-=FACT[k].c;S.fact[k]=1;toast(`🏗️ ${FACT[k].n} construite !`)}break;
+ case'upf':if(S.money>=factUp(k)){S.money-=factUp(k);S.fact[k]++}break;
+ case'start':if(!S.job[k]&&startJob(k,+t.dataset.q,Date.now(),S.rs.auto&&S.rep[k]))toast(`⚙️ ${FACT[k].n} : production lancée`);break;
+ case'rep':S.rep[k]=!S.rep[k];if(S.job[k])S.job[k].rep=S.rep[k];break;
+ case'sell':{const n=Math.floor(S.res[k]),g=n*price(k);S.res[k]-=n;S.money+=g;S.stat.sold+=g;pop(e.clientX,e.clientY,'+'+fmt(g)+' €')}break;
+ case'sellall':{let g=0;for(const p in PROD){const n=Math.floor(S.res[p]);g+=n*price(p);S.res[p]-=n}S.money+=g;S.stat.sold+=g;if(g)pop(e.clientX,e.clientY,'+'+fmt(g)+' €')}break;
+ case'auto':S.auto[k]=!S.auto[k];break;
+ case'ctdo':{const c=S.ct[i];if(c&&S.res[c.p]>=c.q){S.res[c.p]-=c.q;S.money+=c.rw;S.stat.sold+=c.rw;S.stat.ct++;S.ct.splice(i,1);pop(e.clientX,e.clientY,'+'+fmt(c.rw)+' €')}}break;
+ case'ctnew':S.ct.splice(i,1);break;
+ case'rs':{const c=rsCost(k);if(S.money>=c&&S.rs[k]<RSCH[k].max){S.money-=c;S.rs[k]++;toast(`🔬 ${RSCH[k].n} : recherche terminée`)}}break;
+ case'exp':exportSave();break;
+ case'imp':document.getElementById('fimport').click();break;
+ case'restore':{const b=backups()[i];if(b&&confirm('Restaurer la copie du '+new Date(b.at).toLocaleString('fr-FR')+' ?\n(la partie actuelle est d\'abord mise en copie de secours)')){const raw=b.raw;backup('avant restauration');S=parseSave(raw);S.t=Date.now();S.act=Date.now();toast('🛟 Copie restaurée')}}break;
+ case'cin':login();return;
+ case'cout':if(confirm('Déconnecter OneDrive sur cet appareil ? (la partie reste ici et sur OneDrive)')){CFG={cid:CFG.cid};cfgSave();cloudMsg='déconnecté'}break;
+ case'csync':sync(true);break;
+ }
+ if(a!=='gather')S.act=Date.now();
+ tick(Date.now());checkAch();save();render(true);
+});
+document.addEventListener('change',e=>{
+ if(e.target.id==='cid'){CFG.cid=e.target.value.trim();cfgSave();render(true)}
+ if(e.target.id==='fimport'){const f=e.target.files[0];if(!f)return;f.text().then(txt=>{
+  const n=parseSave(txt);if(confirm(`Importer cette partie (score ${fmt(score(n))}) ?\nLa partie actuelle (score ${fmt(score(S))}) sera mise en copie de secours.`)){backup('avant import');S=n;S.act=Date.now();save();toast('⬆️ Partie importée');catchUp();render(true)}
+ }).catch(err=>toast('⚠️ Import impossible : '+err.message));e.target.value=''}
+});
+function exportSave(){const blob=new Blob([ser()],{type:'application/json'}),a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);a.download='industrie-sauvegarde-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
+
+/* ====================== ONEDRIVE (Microsoft Graph) ======================
+   Fichier : OneDrive > Applications > <nom de l'appli> > industrie-sauvegarde.json */
+const CFGK='industrie_onedrive',SCOPE='Files.ReadWrite.AppFolder offline_access',
+ AUTH='https://login.microsoftonline.com/consumers/oauth2/v2.0/',
+ FILE='https://graph.microsoft.com/v1.0/me/drive/special/approot:/industrie-sauvegarde.json:/content',
+ REDIR=location.origin+location.pathname;
+let CFG={};try{CFG=JSON.parse(localStorage.getItem(CFGK)||'{}')}catch(e){}
+let syncing=false,cloudMsg=CFG.rt?'connecté':'non connecté',upKey='';
+const cfgSave=()=>localStorage.setItem(CFGK,JSON.stringify(CFG));
+const b64u=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+async function login(){
+ if(location.protocol==='file:'){toast('⚠️ OneDrive nécessite la version en ligne du jeu (https)');return}
+ const v=b64u(crypto.getRandomValues(new Uint8Array(32))),st=b64u(crypto.getRandomValues(new Uint8Array(16)));
+ const ch=b64u(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)));
+ CFG.ver=v;CFG.state=st;cfgSave();save();
+ location.href=AUTH+'authorize?'+new URLSearchParams({client_id:CFG.cid,response_type:'code',redirect_uri:REDIR,scope:SCOPE,code_challenge:ch,code_challenge_method:'S256',state:st,prompt:'select_account'});
+}
+async function tokenReq(body){
+ const r=await fetch(AUTH+'token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:CFG.cid,scope:SCOPE,...body})});
+ const j=await r.json();if(!r.ok){const e=new Error(j.error_description||j.error||('HTTP '+r.status));e.code=j.error;throw e}
+ CFG.at=j.access_token;if(j.refresh_token)CFG.rt=j.refresh_token;CFG.exp=Date.now()+(j.expires_in-120)*1000;cfgSave()}
+async function getToken(){if(CFG.at&&Date.now()<CFG.exp)return CFG.at;
+ try{await tokenReq({grant_type:'refresh_token',refresh_token:CFG.rt})}catch(e){if(e.code==='invalid_grant'){CFG.rt=null;CFG.at=null;cfgSave();cloudMsg='session expirée : touchez « Connecter OneDrive »'}throw e}
+ return CFG.at}
+async function handleRedirect(){
+ const p=new URLSearchParams(location.search);if(!p.get('code')&&!p.get('error'))return;
+ history.replaceState({},'',REDIR);
+ if(p.get('error')){cloudMsg='connexion refusée : '+(p.get('error_description')||p.get('error'));return}
+ if(p.get('state')!==CFG.state){cloudMsg='connexion invalide, recommencez';return}
+ try{await tokenReq({grant_type:'authorization_code',code:p.get('code'),redirect_uri:REDIR,code_verifier:CFG.ver});cloudMsg='connecté';toast('☁️ OneDrive connecté')}
+ catch(e){cloudMsg='erreur : '+e.message}
+}
+async function sync(manual){
+ if(!CFG.rt||!CFG.cid||syncing)return;syncing=true;render();
+ try{
+  const tk=await getToken();
+  const r=await fetch(FILE,{headers:{Authorization:'Bearer '+tk},cache:'no-store'});
+  let remote=null;if(r.ok)remote=await r.json();else if(r.status!==404)throw new Error('lecture HTTP '+r.status);
+  tick(Date.now());
+  if(remote&&remote.data){const R=migrate(remote.data),rs=score(R),ls=score(S);
+   if(rs>ls||(rs===ls&&(R.act||0)>(S.act||0))){backup('avant synchro OneDrive');S=R;tick(Date.now());save();toast('☁️ Progression récupérée depuis OneDrive');lastH=''}}
+  const key=score(S)+'|'+S.act;
+  if(manual||!remote||key!==upKey||!remote.data||score(migrate(remote.data))<score(S)){
+   const w=await fetch(FILE,{method:'PUT',headers:{Authorization:'Bearer '+tk,'Content-Type':'application/json'},body:ser()});
+   if(!w.ok)throw new Error('écriture HTTP '+w.status);upKey=key}
+  CFG.last=Date.now();cfgSave();cloudMsg='synchronisé à '+new Date().toLocaleTimeString('fr-FR');if(manual)toast('☁️ Synchronisé')
+ }catch(e){if(CFG.rt)cloudMsg='hors ligne ou erreur ('+e.message+')';if(manual)toast('⚠️ '+cloudMsg)}
+ syncing=false;render(true)}
+
+/* ====================== DÉMARRAGE ====================== */
+catchUp();checkAch();save();render(true);
+handleRedirect().then(()=>{render(true);sync()});
+setInterval(()=>{tick(Date.now());checkAch();render()},1000);
+setInterval(save,5000);
+setInterval(()=>sync(),60000);
+document.addEventListener('visibilitychange',()=>{if(document.hidden){tick(Date.now());save();sync()}else{catchUp();render(true);sync()}});
+addEventListener('pagehide',()=>{tick(Date.now());save()});
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
