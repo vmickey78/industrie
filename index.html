@@ -90,7 +90,7 @@ input[type=text]{width:100%;background:#0d131c;border:1px solid var(--line);colo
 <input type="file" id="fimport" accept=".json,application/json" style="display:none">
 <script>
 'use strict';
-const APP_V='2.1.0';
+const APP_V='2.2.0';
 /* ====================== DONNÉES DU JEU ====================== */
 const RES={
  bois:{n:'Bois',i:'🪵',p:1},pierre:{n:'Pierre',i:'🪨',p:1.5},sable:{n:'Sable',i:'⏳',p:1.5},
@@ -247,7 +247,7 @@ const ing=(f,q=1)=>Object.entries(FACT[f].in).map(([r,n])=>`<span class="tag">${
 const VIEW={
 mines(){
  let h=`<div class="scene"><div class="lbl">${sum(S.mine)} niveaux de mines · ${fmt(Object.keys(MINES).reduce((a,k)=>a+MINES[k].r*S.mine[k]*mineMult()*60,0))} ressources/min</div><div class="sky">`+
-  Object.keys(MINES).filter(k=>S.mine[k]).map(k=>MINES[k].i).join('')+`🌲🌲</div></div><h2>Exploitations</h2>`;
+  Object.keys(MINES).filter(k=>S.mine[k]).map(k=>MINES[k].i).join('')+`🌲🌲</div><a href="3d.html" onclick="save()" class="b y" style="position:absolute;right:10px;top:10px;text-decoration:none;font-size:13px;padding:7px 10px">🧊 Vue 3D</a></div><h2>Exploitations</h2>`;
  for(const k in MINES){const m=MINES[k],lv=S.mine[k],c=mineCost(k),c10=mineCost(k,10),r=m.r*lv*mineMult();
   h+=`<div class="card ${lv?'run':'off'}" style="--c:var(--green)"><div class="head"><div class="ico">${m.i}</div><div class="grow"><h3>${m.n}<span class="lv">niv. ${lv}</span></h3>
   <div class="sub">${RES[k].i} ${RES[k].n} : <b>${V('r'+k,'')}</b> / ${fmt(capOf())} · ${lv?'+'+(r*60).toFixed(r*60<10?1:0)+' /min':'à construire'}</div></div></div>
