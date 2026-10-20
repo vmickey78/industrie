@@ -63,7 +63,7 @@ mesh(new THREE.BoxGeometry(103,.1,3),road,26,.05,R.z1,world); // vers la sortie 
 mesh(new THREE.BoxGeometry(3,.1,36),road,R.x0,.05,1,world);mesh(new THREE.BoxGeometry(3,.1,36),road,R.x1,.05,1,world);
 for(let x=-20;x<=72;x+=4)mesh(new THREE.BoxGeometry(1.4,.02,.18),0xe8e8e8,x,.11,R.z1,world);
 // lampadaires
-for(const[x,z]of[[-26,-12],[-26,0],[-26,12],[26,-12],[26,0],[26,12],[-16,-19],[0,-19],[16,-19],[-16,21],[0,21],[16,21],[34,21],[50,21]]){
+for(const[x,z]of[[-26,-12],[-26,0],[-26,12],[26,-12],[26,0],[26,12],[-17.5,-19],[-3.5,-19],[10.5,-19],[-16,21],[0,21],[16,21],[34,21],[50,21]]){
  mesh(new THREE.CylinderGeometry(.08,.1,3.4,6),0x30343a,x,1.7,z,world);mesh(new THREE.SphereGeometry(.28,8,6),lampMat,x,3.5,z,world).castShadow=false}
 for(let i=0;i<110;i++){const a=rnd(0,Math.PI*2),r=rnd(62,76),x=Math.cos(a)*r,z=Math.sin(a)*r;
  if(x<-44&&Math.abs(z)<45)continue;tree(x,z,rnd(.8,1.7),world)}
