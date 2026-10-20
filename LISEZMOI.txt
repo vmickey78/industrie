@@ -1,4 +1,4 @@
-INDUSTRIE — jeu de gestion (v2.1.0)
+INDUSTRIE — jeu de gestion (v3.0.0)
 
 Fichiers : index.html (le jeu), sw.js + manifest.webmanifest + icônes (installation sur iPhone).
 
