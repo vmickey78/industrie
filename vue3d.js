@@ -40,6 +40,16 @@ const winOn=new THREE.MeshStandardMaterial({color:0xffd27a,emissive:0xffa030,emi
 const lampMat=new THREE.MeshStandardMaterial({color:0xfff2c0,emissive:0xffd070,emissiveIntensity:0});
 const rnd=(a,b)=>a+Math.random()*(b-a);
 let seed=1;const srnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+// toit à deux pans (faîtage dans l'axe z) : w = largeur, d = profondeur, h = hauteur
+function gable(w,d,h,mat,x,y,z,p){const sh=new THREE.Shape();sh.moveTo(-w/2,0);sh.lineTo(w/2,0);sh.lineTo(0,h);sh.closePath();
+ const g=new THREE.ExtrudeGeometry(sh,{depth:d,bevelEnabled:false});g.translate(0,0,-d/2);return mesh(g,mat,x,y,z,p)}
+// toit en dents de scie (sheds d'usine) avec verrières orientées au nord
+const glassMat=new THREE.MeshStandardMaterial({color:0x9cc4e0,roughness:.2,metalness:.3,emissive:0xffb050,emissiveIntensity:0});
+function sawtooth(w,d,h,y,p,n=3){const g=new THREE.Group();g.position.y=y;p.add(g);const s=d/n;
+ for(let i=0;i<n;i++){const z0=-d/2+i*s,sh=new THREE.Shape();sh.moveTo(z0,0);sh.lineTo(z0+s,0);sh.lineTo(z0+s,h);sh.closePath();
+  const geo=new THREE.ExtrudeGeometry(sh,{depth:w,bevelEnabled:false});geo.translate(0,0,-w/2);const m=mesh(geo,0x3c4048,0,0,0,g);m.rotation.y=Math.PI/2;
+  const gl=mesh(new THREE.BoxGeometry(w*.92,h*.8,.06),glassMat,0,h*.45,-(z0+s)+.04,g);gl.castShadow=false}
+ return g}
 function tree(x,z,s,p){mesh(new THREE.CylinderGeometry(.15*s,.2*s,1*s,6),0x6b4a2b,x,.5*s,z,p);mesh(new THREE.ConeGeometry(.9*s,2.2*s,7),0x2f7d3a,x,2*s,z,p)}
 function label(parent,y){
  const c=document.createElement('canvas');c.width=512;c.height=160;
@@ -81,7 +91,7 @@ const PARCPOS={ville:[44,-6],gare:[0,34],port:[-50,6]};
 for(const k in J.PARC)slot('parc',k,...PARCPOS[k]);
 
 function buildMine(b,k,lv){const g=b.inner,col=MINEC[k];b.anim={};
- if(k==='bois'){for(let t=0;t<5;t++)tree(rnd(-2,2),rnd(-2,1),1.2,g);mesh(new THREE.BoxGeometry(2,1.4,1.6),0x8a5a33,0,.7,1.6,g);mesh(new THREE.ConeGeometry(1.6,1,4),0x5a3a20,0,1.9,1.6,g).rotation.y=Math.PI/4}
+ if(k==='bois'){for(let t=0;t<5;t++)tree(rnd(-2,2),rnd(-2,1),1.2,g);mesh(new THREE.BoxGeometry(2,1.4,1.6),0x8a5a33,0,.7,1.6,g);gable(2.4,1.9,.9,0x5a3a20,0,1.4,1.6,g)}
  else{const h=1.5+Math.min(lv,40)*.08;const hill=mesh(new THREE.DodecahedronGeometry(2.6,0),col,0,h*.5,-.5,g);hill.scale.set(1,h/2.6,1);
   mesh(new THREE.BoxGeometry(1.2,1.3,.4),0x1a1a1a,0,.65,1.9,g);mesh(new THREE.BoxGeometry(1.6,.25,.6),0x6b4a2b,0,1.35,1.9,g);
   for(let r=0;r<3;r++)mesh(new THREE.DodecahedronGeometry(.35,0),col,rnd(-1.5,1.5),.3,rnd(2.4,3.2),g)}
@@ -96,7 +106,7 @@ function buildFact(b,k,lv,job){const g=b.inner,col=FACTC[k];b.anim={};
   mesh(new THREE.BoxGeometry(.3,6,.3),0xe0a020,2.8,3,-2,g);const arm=mesh(new THREE.BoxGeometry(4,.3,.3),0xe0a020,1.2,6,-2,g);b.anim.arm=arm;b.lab.position.y=7;return}
  const h=2.4+Math.min(lv,10)*.25;
  mesh(new THREE.BoxGeometry(5,h,4),col,0,h/2,0,g);
- const roof=mesh(new THREE.CylinderGeometry(0,3.2,1.2,4),0x3c4048,0,h+.6,0,g);roof.rotation.y=Math.PI/4;roof.scale.set(1.12,1,.9);
+ sawtooth(5.2,4.2,1.1,h,g);
  mesh(new THREE.BoxGeometry(1.4,1.6,.1),0x3a2a1a,0,.8,2.01,g);
  for(const x of[-1.7,1.7])mesh(new THREE.BoxGeometry(.9,.7,.1),job?winOn:winMat,x,h*.6,2.01,g);
  mesh(new THREE.CylinderGeometry(.35,.45,3,10),0x7a3b2e,1.6,h+1.2,-1.2,g);
@@ -112,12 +122,12 @@ const townMat=[0xd9c8a9,0xc98f6b,0xe6e0d4,0xb7c9d6,0xd6b26b].map(c=>M(c)),roofMa
 function buildParc(b,k,own,town){const g=b.inner;b.anim={};
  if(!own){sign(g,'À VENDRE');b.lab.position.y=4.5;return}
  if(k==='ville'){ // mairie + maisons
-  mesh(new THREE.BoxGeometry(6,4,4),0xe8e2d0,12,2,0,g);mesh(new THREE.CylinderGeometry(0,4.4,1.8,4),0x5a6b7a,12,4.9,0,g).rotation.y=Math.PI/4;
+  mesh(new THREE.BoxGeometry(6,4,4),0xe8e2d0,12,2,0,g);gable(6.6,4.4,1.8,0x5a6b7a,12,4,0,g);
   mesh(new THREE.BoxGeometry(1,2.5,1),0xe8e2d0,12,6.6,0,g);
   const n=Math.min(town,45);seed=7;
   for(let i=0;i<n;i++){const x=-10+(i%5)*4.5,z=-18+Math.floor(i/5)*4.5,fl=1+Math.floor((town-1-i)/45)+(town>45&&i<town%45?1:0);
    const hh=1.6*Math.min(fl,4);const m=mesh(new THREE.BoxGeometry(2.6,hh,2.4),townMat[Math.floor(srnd()*5)],x,hh/2,z,g);
-   mesh(new THREE.ConeGeometry(2,1.2,4),roofMat[Math.floor(srnd()*3)],x,hh+.6,z,g).rotation.y=Math.PI/4;
+   gable(3,2.8,1.2,roofMat[Math.floor(srnd()*3)],x,hh,z,g);
    mesh(new THREE.BoxGeometry(.6,.6,.05),winMat,x-.6,hh-.8,z+1.21,g);mesh(new THREE.BoxGeometry(.6,.6,.05),winMat,x+.6,hh-.8,z+1.21,g)}
   b.lab.position.y=9;b.g.userData.labOff=12;return}
  if(k==='gare'){mesh(new THREE.BoxGeometry(12,.6,3),0xb0a898,0,.3,6,g);mesh(new THREE.BoxGeometry(7,3,3),0xc9a77a,0,1.8,1,g);
@@ -204,7 +214,7 @@ renderer.setAnimationLoop(()=>{
  tmpC.copy(NIGHT).lerp(DAY,day).lerp(DUSK,dusk*day);scene.background.copy(tmpC);scene.fog.color.copy(tmpC);
  sun.intensity=2.2*day;hemi.intensity=.45+.65*day;moon.intensity=.8*night;
  {const dd=cam.position.distanceTo(ctl.target);scene.fog.near=dd*1.1;scene.fog.far=dd*2.6}stars.material.opacity=night;
- winMat.emissiveIntensity=.9*night;winOn.emissiveIntensity=.6+.9*night;lampMat.emissiveIntensity=1.5*night;
+ winMat.emissiveIntensity=.9*night;glassMat.emissiveIntensity=.7*night;winOn.emissiveIntensity=.6+.9*night;lampMat.emissiveIntensity=1.5*night;
  for(const l of glow)l.intensity=40*night;
  for(const key in B){const b=B[key],a=b.anim;
   if(b.grow<1){b.grow=Math.min(1,b.grow+dt*.8);const s=1-Math.pow(1-b.grow,3);b.inner.scale.set(1,Math.max(.01,s),1)}
