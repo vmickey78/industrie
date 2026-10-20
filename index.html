@@ -99,7 +99,7 @@ input[type=text]{width:100%;background:#0d131c;border:1px solid var(--line);colo
 <input type="file" id="fimport" accept=".json,application/json" style="display:none">
 <script>
 'use strict';
-const APP_V='3.0.0';
+const APP_V='3.0.1';
 /* ====================== DONNÉES DU JEU ====================== */
 const RES={
  bois:{n:'Bois',i:'🪵',p:1},pierre:{n:'Pierre',i:'🪨',p:1.5},sable:{n:'Sable',i:'⏳',p:1.5},
@@ -360,7 +360,7 @@ function chips(){const el=document.getElementById('chips');
   Object.keys(PROD).filter(k=>S.res[k]>=1).map(k=>`<span class="chip">${PROD[k].i} ${fmt(S.res[k])}</span>`).join('')}
 function render(force){
  document.body.classList.toggle('mode3d',tab==='3d');
- if(tab==='3d'&&!v3d)v3d=import('./vue3d.js').then(m=>m.start(J)).catch(e=>toast('⚠️ 3D indisponible : '+e.message));
+ if(tab==='3d'&&!v3d)v3d=import('./vue3d.js?v='+APP_V).then(m=>m.start(J)).catch(e=>toast('⚠️ 3D indisponible : '+e.message));
  cur={};bars={};const h=VIEW[tab](),m=document.getElementById('main');
  if(force||h!==lastH){m.innerHTML=h;lastH=h}
  const now=Date.now();
@@ -464,7 +464,7 @@ setInterval(save,5000);
 setInterval(()=>sync(),60000);
 document.addEventListener('visibilitychange',()=>{if(document.hidden){tick(Date.now());save();sync()}else{catchUp();render(true);sync()}});
 addEventListener('pagehide',()=>{tick(Date.now());save()});
-if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js');
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js',{updateViaCache:'none'});
 </script>
 </body>
 </html>
